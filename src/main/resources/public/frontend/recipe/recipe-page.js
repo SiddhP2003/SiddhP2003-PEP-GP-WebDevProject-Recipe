@@ -52,16 +52,16 @@ window.addEventListener("DOMContentLoaded", () => {
      * - Search button → searchRecipes()
      * - Logout button → processLogout()
      */
-
-    /*
-     * TODO: On page load, call getRecipes() to populate the list
-     */
     searchButton.addEventListener("click", searchRecipes);
     addRecipeSubmitInput.addEventListener("click", addRecipe);
     updateRecipeSubmitInput.addEventListener("click", updateRecipe);
     deleteRecipeSubmitInput.addEventListener("click", deleteRecipe);
     logoutButton.addEventListener("click", processLogout);
 
+    /*
+     * TODO: On page load, call getRecipes() to populate the list
+     */
+    getRecipes();
     /**
      * TODO: Search Recipes Function
      * - Read search term from input field
