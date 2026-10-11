@@ -16,7 +16,7 @@ window.addEventListener("DOMContentLoaded", () => {
      * - Admin link and logout button
      * - Search input
     */
-
+    
     /*
      * TODO: Show logout button if auth-token exists in sessionStorage
      */
