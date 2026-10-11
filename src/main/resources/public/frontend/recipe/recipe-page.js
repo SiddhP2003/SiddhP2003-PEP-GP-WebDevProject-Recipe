@@ -140,7 +140,43 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function updateRecipe() {
         // Implement update logic here
+        try {
+            const name = updateRecipeNameInput.value.trim();
+            const instructions = updateRecipeInstructionsInput.value.trim();
+    
+            if(!name || !instructions){
+                alert("Please fill out all fields.");
+                return;
+            }
+            
+            const recipe = recipes.find(recipe => recipe.name.toLowerCase() === name.toLowerCase());
+            if(!recipe){
+                alert("Recipe not found.");
+                return;
+            }
 
+            const response = await fetch(`${BASE_URL}/recipes/${recipe.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+                },
+                body: JSON.stringify({...recipe, instructions})
+            });
+    
+            if(response.ok) {
+                updateRecipeNameInput.value = "";
+                updateRecipeInstructionsInput.value = "";
+                await getRecipes();
+            }
+            else {
+                alert("Could not update recipe.");
+            }
+        }
+        catch (error){
+            console.error("update recipe error", error);
+            alert("Error updating recipe.");
+        }
     }
 
     /**
@@ -152,6 +188,38 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function deleteRecipe() {
         // Implement delete logic here
+        try {
+            const name = deleteRecipeNameInput.value.trim();
+
+            if(!name){
+                alert("Please filled out all fields.");
+            }
+
+            const recipe = recipes.find(recipe => recipe.name.toLowerCase() == name.toLowerCase);
+            if(!recipe){
+                alert("Recipe not found.");
+                return;
+            }
+
+            const response = await fetch(`${BASE_URL}/recipes/${recipe.id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+                }
+            });
+
+            if(response.ok){
+                deleteRecipeNameInput.value = "";
+                await getRecipes();
+            }
+            else{
+                alert("Could not delete recipe.");
+            }
+        }
+        catch (error) {
+            console.error("delete recipe error", error);
+            alert("Error deleting recipe.");
+        }
     }
 
     /**
