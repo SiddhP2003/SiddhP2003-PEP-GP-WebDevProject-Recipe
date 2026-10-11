@@ -72,7 +72,9 @@ window.addEventListener("DOMContentLoaded", () => {
     async function searchRecipes() {
         // Implement search logic here
         try {
-            const reponse = await fetch(`${BASE_URL}/recipes?name=${encodeURIComponent(searchTerm)}`, {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+    
+            const response = await fetch(`${BASE_URL}/recipes?name=${encodeURIComponent(searchTerm)}`, {
                 headers: { "Authorization": "Bearer " + sessionStorage.getItem("auth-token")}
             });
             if (!response.ok){
@@ -193,9 +195,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
             if(!name){
                 alert("Please filled out all fields.");
+                return;
             }
 
-            const recipe = recipes.find(recipe => recipe.name.toLowerCase() == name.toLowerCase);
+            const recipe = recipes.find(recipe => recipe.name.toLowerCase() == name.toLowerCase());
             if(!recipe){
                 alert("Recipe not found.");
                 return;
@@ -271,6 +274,23 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function processLogout() {
         // Implement logout logic here
+        try {
+            const response = await fetch(`${BASE_URL}/logout`, {
+                method: "POST",
+                headers: { "Authorization": "Bearer " + sessionStorage.getItem("auth-token")}
+            });
+            if(response.ok){
+                sessionStorage.clear();
+                window.location.href = "../login/login-page.html";
+            }
+            else{
+                alert("Logout failed");
+            }
+        }
+        catch(error){
+            console.error("logout error", error);
+            alert("Error logging out.");
+        }
     }
 
 });
