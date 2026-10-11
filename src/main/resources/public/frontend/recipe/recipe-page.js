@@ -102,7 +102,7 @@ window.addEventListener("DOMContentLoaded", () => {
             const instructions = addRecipeInstructionsInput.value;
     
             if(!name.trim() || !instructions.trim()){
-                alert("Please fill out all fields.")
+                alert("Please fill out all fields.");
                 return;
             }
     
@@ -163,7 +163,7 @@ window.addEventListener("DOMContentLoaded", () => {
     async function getRecipes() {
         // Implement get logic here
         try {
-            const reponse = await fetch(`${BASE_URL}/recipes`, {
+            const response = await fetch(`${BASE_URL}/recipes`, {
                 headers: { "Authorization": "Bearer " + sessionStorage.getItem("auth-token")}
             });
             if (!response.ok){
@@ -186,8 +186,8 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     function refreshRecipeList() {
         // Implement refresh logic here
-        recipeList.innerHTMl = "";
-        recipes.forEach(() => {
+        recipeList.innerHTML = "";
+        recipes.forEach(recipe => {
             const li = document.createElement("li");
             li.textContent = `${recipe.name}: ${recipe.instructions}`;
             recipeList.appendChild(li);
