@@ -12,7 +12,7 @@ const usernameInput = document.getElementById("username-input");
 const emailInput = document.getElementById("email-input");
 const passwordInput = document.getElementById("password-input");
 const repeatPasswordInput = document.getElementById("repeat-password-input");
-const registerInput = document.getElementById("register-button");
+const registerButton = document.getElementById("register-button");
 
 /* 
  * TODO: Ensure the register button calls processRegistration when clicked
