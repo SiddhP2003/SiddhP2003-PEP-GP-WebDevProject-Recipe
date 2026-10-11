@@ -16,15 +16,34 @@ window.addEventListener("DOMContentLoaded", () => {
      * - Admin link and logout button
      * - Search input
     */
-    
+    const adminLink = document.getElementById("admin-link");
+    const logoutButton = document.getElementById("logout-button");
+    const searchInput = document.getElementById("search-input");
+    const searchButton = document.getElementById("search-button");
+    const recipeList = document.getElementById("recipe-list");
+
+    const addRecipeNameInput = document.getElementById("add-recipe-name-input");
+    const addRecipeInstructionsInput = document.getElementById("add-recipe-instructions-input");
+    const addRecipeSubmitInput = document.getElementById("add-recipe-submit-input");
+
+    const updateRecipeNameInput = document.getElementById("update-recipe-name-input");
+    const updateRecipeInstructionsInput = document.getElementById("update-recipe-instructions-input");
+    const updateRecipeSubmitInput = document.getElementById("update-recipe-submit-input");
+
+    const deleteRecipeNameInput = document.getElementById("delete-recipe-name-input");
+    const deleteRecipeSubmitInput = document.getElementById("delete-recipe-submit-input");
     /*
      * TODO: Show logout button if auth-token exists in sessionStorage
      */
-
+    if (sessionStorage.getItem("auth-token")){
+        logoutButton.hidden = false;
+    }
     /*
      * TODO: Show admin link if is-admin flag in sessionStorage is "true"
      */
-
+    if (sessionStorage.getItem("is-admin") === "true"){
+        adminLink.hidden = false;
+    }
     /*
      * TODO: Attach event handlers
      * - Add recipe button → addRecipe()
@@ -37,7 +56,11 @@ window.addEventListener("DOMContentLoaded", () => {
     /*
      * TODO: On page load, call getRecipes() to populate the list
      */
-
+    searchButton.addEventListener("click", searchRecipes);
+    addRecipeSubmitInput.addEventListener("click", addRecipe);
+    updateRecipeSubmitInput.addEventListener("click", updateRecipe);
+    deleteRecipeSubmitInput.addEventListener("click", deleteRecipe);
+    logoutButton.addEventListener("click", processLogout);
 
     /**
      * TODO: Search Recipes Function
@@ -48,6 +71,20 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function searchRecipes() {
         // Implement search logic here
+        try {
+            const reponse = await fetch(`${BASE_URL}/recipes?name=${encodeURIComponent(searchTerm)}`, {
+                headers: { "Authorization": "Bearer " + sessionStorage.getItem("auth-token")}
+            });
+            if (!response.ok){
+                throw new Error("Failed to fetch recipes");
+            }
+            recipes = await response.json();
+            refreshRecipeList();
+        }
+        catch(error){
+            console.error(error);
+            alert("Error loading recipes");
+        }
     }
 
     /**
@@ -60,6 +97,37 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function addRecipe() {
         // Implement add logic here
+        try {
+            const name = addRecipeNameInput.value;
+            const instructions = addRecipeInstructionsInput.value;
+    
+            if(!name.trim() || !instructions.trim()){
+                alert("Please fill out all fields.")
+                return;
+            }
+    
+            const requestBody = { name, instructions};
+    
+            const reponse = await fetch(`${BASE_URL}/recipes`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + sessionStorage.getItem("auth-token")},
+                body: JSON.stringify(requestBody)
+            });
+
+            if (response.ok){
+                addRecipeNameInput.value = "";
+                addRecipeInstructionsInput.value = "";
+                await getRecipes();
+            }
+            else{
+                alert("Could not add recipe.");
+            }
+        }
+        catch(error){
+            console.error("Error");
+            alert("Error adding recipe.");
+        }
+
     }
 
     /**
@@ -72,6 +140,7 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function updateRecipe() {
         // Implement update logic here
+        
     }
 
     /**
@@ -93,6 +162,20 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function getRecipes() {
         // Implement get logic here
+        try {
+            const reponse = await fetch(`${BASE_URL}/recipes`, {
+                headers: { "Authorization": "Bearer " + sessionStorage.getItem("auth-token")}
+            });
+            if (!response.ok){
+                throw new Error("Failed to fetch recipes");
+            }
+            recipes = await response.json();
+            refreshRecipeList();
+        }
+        catch(error){
+            console.error(error);
+            alert("Error loading recipes");
+        }
     }
 
     /**
@@ -103,6 +186,12 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     function refreshRecipeList() {
         // Implement refresh logic here
+        recipeList.innerHTMl = "";
+        recipes.forEach(() => {
+            const li = document.createElement("li");
+            li.textContent = `${recipe.name}: ${recipe.instructions}`;
+            recipeList.appendChild(li);
+        });
     }
 
     /**
