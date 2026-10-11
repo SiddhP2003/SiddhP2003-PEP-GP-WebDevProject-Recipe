@@ -98,7 +98,7 @@ window.addEventListener("DOMContentLoaded", () => {
     async function addRecipe() {
         // Implement add logic here
         try {
-            const name = addRecipeNameInput.value;
+            const name = addRecipeNameInput.value.trim();
             const instructions = addRecipeInstructionsInput.value;
     
             if(!name.trim() || !instructions.trim()){
@@ -108,7 +108,7 @@ window.addEventListener("DOMContentLoaded", () => {
     
             const requestBody = { name, instructions};
     
-            const reponse = await fetch(`${BASE_URL}/recipes`, {
+            const response = await fetch(`${BASE_URL}/recipes`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json", "Authorization": "Bearer " + sessionStorage.getItem("auth-token")},
                 body: JSON.stringify(requestBody)
@@ -124,7 +124,7 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         }
         catch(error){
-            console.error("Error");
+            console.error("Error", error);
             alert("Error adding recipe.");
         }
 
@@ -140,7 +140,7 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     async function updateRecipe() {
         // Implement update logic here
-        
+
     }
 
     /**
